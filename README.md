@@ -9,7 +9,7 @@ It's enabled by [JSR 223](https://www.jcp.org/en/jsr/detail?id=223) (Java Script
 ### Running a script from file system
 
 A simple usage example for KtsRunner can be described as follows:
-The definition of a class is placed in a .kts file, which is loaded into a normal Kotlin program. 
+The definition of a class is placed in a `.kts file, which is loaded into a normal Kotlin program.
 
 1. The example class
 ```kotlin
@@ -27,10 +27,10 @@ ClassFromScript("I was created in kts")
 
 ```kotlin
 val scriptReader = Files.newBufferedReader(Paths.get("path/classDeclaration.kts"))
-KtsObjectLoader().load<ClassFromScript>(scriptReader)::class)
+val loadedObj = KtsObjectLoader().load<ClassFromScript>(scriptReader)
 ```
 
-As shown, the `KtsObjectLoader` class can be used for loading classes from a `.kts` file. Currently, the library only supports single entities coming from the script.
+As shown, the `KtsObjectLoader` class can be used for loading an object from a `.kts` file. Currently, the library only supports single entities coming from the script.
 
 ## Getting Started
 

@@ -6,6 +6,7 @@ before_install:
 
 script: ./gradlew clean build
 deploy:
-    on: master
-    ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayApiKey=$BINTRAY_KEY
-
+    provider: script
+    script: ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayApiKey=$BINTRAY_KEY
+    on: 
+branch: master

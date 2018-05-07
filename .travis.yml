@@ -1,0 +1,11 @@
+language: java
+
+before_install:
+  - chmod -R +x src 
+  - chmod +x gradlew
+
+script: ./gradlew clean build
+deploy:
+    on: master
+    ./gradlew bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayApiKey=$BINTRAY_KEY
+

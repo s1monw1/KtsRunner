@@ -77,8 +77,8 @@ bintray {
         name = "KtsRunner"
         userOrg = "s1m0nw1"
         websiteUrl = "https://kotlinexpertise.com"
-        githubRepo = "s1monw1/"
-        vcsUrl = "https://github.com/s1monw1/"
+        githubRepo = "s1monw1/KtsRunner"
+        vcsUrl = "https://github.com/s1monw1/KtsRunner"
         description = "Library for executing kts files from Kotlin"
         setLabels("kotlin")
         setLicenses("MIT")

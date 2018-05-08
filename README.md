@@ -12,19 +12,19 @@ A simple usage example for KtsRunner can be described as follows:
 The declaration of a class is placed in a `.kts file, which is supposed to be loaded into a normal Kotlin program so that it
 can be processed further.
 
-1. The example class
+1. Example class
 ```kotlin
 data class ClassFromScript(val x: String)
 ```
 
-2. The `.kts` file
+2. `.kts` file
 ```kotlin
 import de.swirtz.ktsobjectloader.ClassFromScript
 
 ClassFromScript("I was created in kts")
 ```
 
-3. The code to load the class
+3. Code to load the object
 
 ```kotlin
 val scriptReader = Files.newBufferedReader(Paths.get("path/classDeclaration.kts"))

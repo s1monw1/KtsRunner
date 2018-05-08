@@ -1,7 +1,7 @@
 # KtsRunner
 [![Build Status](https://travis-ci.org/s1monw1/KtsRunner.svg?branch=master)](https://travis-ci.org/s1monw1/KtsRunner)
 ___
-**KtsRunner** is a light-weight tool that allows the execution of `.kts (Kotlin Script) files from ordinary Kotlin programs.
+**KtsRunner** is a light-weight tool that allows the execution of `.kts` (Kotlin Script) files from ordinary Kotlin programs.
 It's enabled by [JSR 223](https://www.jcp.org/en/jsr/detail?id=223) (Java Scripting Engines API).
 
 ## Usage
@@ -46,6 +46,10 @@ println(fromScript)
 // >> 15
 ```
 
+
+### Application Area
+
+You might want to use **KtsRunner** when some part of your application's source has to be outsourced from the regular code. As an example, you can think of an application that provides a test suite runtime. The actual test cases are provided by technical testers who write their test scripts using a **domain specific language** that is provided by the main application. Since you don't want testers to add source files (defining new test cases) to your application all the time, the test case creation is made in independent `.kts` (Kotlin Scripting) files in which the DSL is utilized by the testing team. The test suite main application can use the presented **KtsRunner** library for loading the test cases provided in `.kts` files and process them further afterward.
 
 ## Getting Started
 

@@ -9,7 +9,7 @@ It's enabled by [JSR 223](https://www.jcp.org/en/jsr/detail?id=223) (Java Script
 ### Running a script from file system
 
 A simple usage example for KtsRunner can be described as follows:
-The declaration of a class is placed in a `.kts file, which is supposed to be loaded into a normal Kotlin program so that it
+The declaration of a class is placed in a `.kts` file, which is supposed to be loaded into a normal Kotlin program so that it
 can be processed further.
 
 1. Example class

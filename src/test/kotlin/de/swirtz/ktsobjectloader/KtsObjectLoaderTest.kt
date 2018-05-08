@@ -44,6 +44,16 @@ class KtsObjectLoaderTest {
     }
 
     @Test
+    fun `expression from script`() {
+        val scriptContent = "5 + 10"
+
+        println(scriptContent)
+        assertEquals(15, KtsObjectLoader().load(scriptContent))
+    }
+
+
+
+    @Test
     fun `class loaded from script`() {
         val scriptContent = Files.readAllBytes(Paths.get("src/test/resources/testscript.kts"))?.let {
             String(it)

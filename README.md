@@ -56,7 +56,7 @@ maven {
     setUrl("https://dl.bintray.com/s1m0nw1/KtsRunner")
 }
 
-compile("de.swirtz:ktsrunner:0.0.x")
+compile("de.swirtz:ktsRunner:0.0.x")
 
 ```
 

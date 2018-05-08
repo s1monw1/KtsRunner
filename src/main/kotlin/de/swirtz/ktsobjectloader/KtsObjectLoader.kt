@@ -6,8 +6,11 @@ import javax.script.ScriptEngineManager
 
 class KtsObjectLoader {
 
-    val engine = ScriptEngineManager().getEngineByExtension("kts")
-            as KotlinJsr223JvmLocalScriptEngine
+    companion object {
+        val engine = ScriptEngineManager().getEngineByExtension("kts")
+                as KotlinJsr223JvmLocalScriptEngine
+
+    }
 
     inline fun <reified T> load(script: String): T {
         val loaded: Any = engine.eval(script)

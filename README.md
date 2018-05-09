@@ -59,8 +59,12 @@ In your Gradle build, simply include the following repository and dependency:
 maven { 
     setUrl("https://dl.bintray.com/s1m0nw1/KtsRunner")
 }
+```
 
-compile("de.swirtz:ktsRunner:0.0.x")
-
+```kotlin
+dependencies {
+    //...
+    compile("de.swirtz:ktsRunner:0.0.x")
+}
 ```
 

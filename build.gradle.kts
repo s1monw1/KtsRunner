@@ -8,7 +8,7 @@ import org.gradle.api.publish.maven.MavenPom
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
 
 project.group = "de.swirtz"
-project.version = "0.0.1"
+project.version = "0.0.2"
 val artifactID = "ktsRunner"
 
 plugins {

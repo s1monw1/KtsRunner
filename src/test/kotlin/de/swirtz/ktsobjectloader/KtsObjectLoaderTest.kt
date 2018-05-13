@@ -1,6 +1,7 @@
 package de.swirtz.ktsobjectloader
 
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngine
 import org.junit.Test
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -33,7 +34,7 @@ class KtsObjectLoaderTest {
 
     @Test
     fun `simple evaluations should work`() {
-        with(KtsObjectLoader.engine) {
+        with(KtsObjectLoader.engine  as KotlinJsr223JvmLocalScriptEngine) {
             val res1 = eval("val x = 3")
             assertNull(res1, "No returned value expected")
             val res2 = eval("x + 2")
@@ -50,7 +51,6 @@ class KtsObjectLoaderTest {
         println(scriptContent)
         assertEquals(15, KtsObjectLoader().load(scriptContent))
     }
-
 
 
     @Test

@@ -19,7 +19,7 @@ data class ClassFromScript(val x: String)
 
 2. `.kts` file
 ```kotlin
-import de.swirtz.ktsobjectloader.ClassFromScript
+import de.swirtz.ktsrunner.objectloader.ClassFromScript
 
 ClassFromScript("I was created in kts")
 ```

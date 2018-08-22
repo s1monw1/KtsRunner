@@ -8,7 +8,7 @@ import org.gradle.api.publish.maven.MavenPom
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
 
 project.group = "de.swirtz"
-project.version = "0.0.3"
+project.version = "0.0.4"
 val artifactID = "ktsRunner"
 
 plugins {
@@ -19,14 +19,14 @@ plugins {
 }
 
 dependencies {
-    runtime(kotlin("stdlib-jdk8", kotlinVersion))
-    runtime(kotlin("reflect", kotlinVersion))
+    implementation(kotlin("stdlib-jdk8", kotlinVersion))
+    implementation(kotlin("reflect", kotlinVersion))
 
-    compile(kotlin("script-runtime", kotlinVersion))
-    compile(kotlin("compiler-embeddable", kotlinVersion))
-    compile(kotlin("script-util", kotlinVersion))
-    runtime("org.slf4j:slf4j-api:1.7.14")
-    runtime("ch.qos.logback:logback-classic:1.1.3")
+    implementation(kotlin("script-runtime", kotlinVersion))
+    implementation(kotlin("compiler-embeddable", kotlinVersion))
+    implementation(kotlin("script-util", kotlinVersion))
+    implementation("org.slf4j:slf4j-api:1.7.14")
+    implementation("ch.qos.logback:logback-classic:1.1.3")
     testCompile(kotlin("test-junit", kotlinVersion))
     testCompile("junit:junit:4.11")
 }

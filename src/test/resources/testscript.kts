@@ -1,3 +1,1 @@
-import de.swirtz.ktsobjectloader.ClassFromScript
-
-ClassFromScript("I was created in kts; äö")
+de.swirtz.ktsrunner.objectloader.ClassFromScript("I was created in kts; äö")

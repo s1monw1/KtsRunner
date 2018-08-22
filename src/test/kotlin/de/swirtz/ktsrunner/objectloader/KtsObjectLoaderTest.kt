@@ -1,4 +1,4 @@
-package de.swirtz.ktsobjectloader
+package de.swirtz.ktsrunner.objectloader
 
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngine
@@ -77,7 +77,8 @@ class KtsObjectLoaderTest {
     fun `multiple classes loaded from script via InputStream`() {
         val scriptContent = Files.newInputStream(Paths.get("src/test/resources/testscript.kts"))
         val scriptContent2 = Files.newInputStream(Paths.get("src/test/resources/testscript2.kts"))
-        KtsObjectLoader().loadAll<ClassFromScript>(scriptContent, scriptContent2).forEach {
+        KtsObjectLoader()
+            .loadAll<ClassFromScript>(scriptContent, scriptContent2).forEach {
             assertEquals(ClassFromScript::class, it::class)
         }
     }

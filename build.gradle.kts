@@ -1,7 +1,5 @@
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import com.github.jengelman.gradle.plugins.shadow.ShadowApplicationPlugin
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.jfrog.bintray.gradle.BintrayExtension
 import org.gradle.api.publish.maven.MavenPom
 
@@ -16,7 +14,6 @@ plugins {
     `maven-publish`
     `java-library`
     id("com.jfrog.bintray") version "1.8.0"
-    id("com.github.johnrengelman.shadow") version "2.0.2"
 }
 
 dependencies {
@@ -28,8 +25,8 @@ dependencies {
     implementation(kotlin("compiler-embeddable", kotlinVersion))
     implementation(kotlin("script-util", kotlinVersion))
 
-    testCompile(kotlin("test-junit", kotlinVersion))
-    testCompile("junit:junit:4.11")
+    testImplementation(kotlin("test-junit", kotlinVersion))
+    testImplementation("junit:junit:4.11")
 }
 
 
@@ -38,22 +35,9 @@ repositories {
     jcenter()
 }
 
-val shadowJar: ShadowJar by tasks
-shadowJar.apply {
-    baseName = artifactID
-    classifier = null
-}
-
-fun MavenPom.addDependencies() = withXml {
-    asNode().appendNode("dependencies").let { depNode ->
-        configurations.compile.allDependencies.forEach {
-            depNode.appendNode("dependency").apply {
-                appendNode("groupId", it.group)
-                appendNode("artifactId", it.name)
-                appendNode("version", it.version)
-            }
-        }
-    }
+val sourcesJar by tasks.creating(Jar::class) {
+    classifier = "sources"
+    from(java.sourceSets["main"].allSource)
 }
 
 val publicationName = "${artifactID}_pub"
@@ -61,8 +45,8 @@ publishing {
     publications.invoke {
         publicationName(MavenPublication::class) {
             artifactId = artifactID
-            artifact(shadowJar)
-            pom.addDependencies()
+            from(components["java"])
+            artifact(sourcesJar)
         }
     }
 }
@@ -89,9 +73,6 @@ bintray {
 
 
 tasks {
-    withType(GradleBuild::class.java) {
-        dependsOn(shadowJar)
-    }
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
     }
@@ -99,7 +80,7 @@ tasks {
         testLogging.showStandardStreams = true
     }
     withType<GenerateMavenPom> {
-        destination = file("$buildDir/libs/${shadowJar.archiveName}.pom")
+        destination = file("$buildDir/libs/$artifactID.pom")
     }
 }
 

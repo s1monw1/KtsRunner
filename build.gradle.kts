@@ -14,6 +14,7 @@ val artifactID = "ktsRunner"
 plugins {
     kotlin("jvm") version "1.2.61"
     `maven-publish`
+    `java-library`
     id("com.jfrog.bintray") version "1.8.0"
     id("com.github.johnrengelman.shadow") version "2.0.2"
 }
@@ -21,12 +22,12 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib-jdk8", kotlinVersion))
     implementation(kotlin("reflect", kotlinVersion))
-
+    implementation("org.slf4j:slf4j-api:1.7.14")
+    implementation("ch.qos.logback:logback-classic:1.1.3")
     implementation(kotlin("script-runtime", kotlinVersion))
     implementation(kotlin("compiler-embeddable", kotlinVersion))
     implementation(kotlin("script-util", kotlinVersion))
-    implementation("org.slf4j:slf4j-api:1.7.14")
-    implementation("ch.qos.logback:logback-classic:1.1.3")
+
     testCompile(kotlin("test-junit", kotlinVersion))
     testCompile("junit:junit:4.11")
 }

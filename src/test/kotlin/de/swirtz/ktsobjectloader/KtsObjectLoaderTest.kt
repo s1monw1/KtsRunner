@@ -10,7 +10,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.fail
 
-
 class KtsObjectLoaderTest {
 
     @Test
@@ -34,7 +33,7 @@ class KtsObjectLoaderTest {
 
     @Test
     fun `simple evaluations should work`() {
-        with(KtsObjectLoader.engine  as KotlinJsr223JvmLocalScriptEngine) {
+        with(KtsObjectLoader.engine as KotlinJsr223JvmLocalScriptEngine) {
             val res1 = eval("val x = 3")
             assertNull(res1, "No returned value expected")
             val res2 = eval("x + 2")
@@ -52,7 +51,6 @@ class KtsObjectLoaderTest {
         assertEquals(15, KtsObjectLoader().load(scriptContent))
     }
 
-
     @Test
     fun `class loaded from script`() {
         val scriptContent = Files.readAllBytes(Paths.get("src/test/resources/testscript.kts"))?.let {
@@ -69,4 +67,18 @@ class KtsObjectLoaderTest {
         assertEquals(ClassFromScript::class, KtsObjectLoader().load<ClassFromScript>(scriptContent)::class)
     }
 
+    @Test
+    fun `class loaded from script via InputStream`() {
+        val scriptContent = Files.newInputStream(Paths.get("src/test/resources/testscript.kts"))
+        assertEquals(ClassFromScript::class, KtsObjectLoader().load<ClassFromScript>(scriptContent)::class)
+    }
+
+    @Test
+    fun `multiple classes loaded from script via InputStream`() {
+        val scriptContent = Files.newInputStream(Paths.get("src/test/resources/testscript.kts"))
+        val scriptContent2 = Files.newInputStream(Paths.get("src/test/resources/testscript2.kts"))
+        KtsObjectLoader().loadAll<ClassFromScript>(scriptContent, scriptContent2).forEach {
+            assertEquals(ClassFromScript::class, it::class)
+        }
+    }
 }

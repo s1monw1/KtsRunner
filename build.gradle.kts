@@ -19,14 +19,14 @@ plugins {
 }
 
 dependencies {
-    compile(kotlin("stdlib-jdk8", kotlinVersion))
-    compile(kotlin("reflect", kotlinVersion))
+    runtime(kotlin("stdlib-jdk8", kotlinVersion))
+    runtime(kotlin("reflect", kotlinVersion))
 
     compile(kotlin("script-runtime", kotlinVersion))
     compile(kotlin("compiler-embeddable", kotlinVersion))
     compile(kotlin("script-util", kotlinVersion))
-    compile("org.slf4j:slf4j-api:1.7.14")
-    compile("ch.qos.logback:logback-classic:1.1.3")
+    runtime("org.slf4j:slf4j-api:1.7.14")
+    runtime("ch.qos.logback:logback-classic:1.1.3")
     testCompile(kotlin("test-junit", kotlinVersion))
     testCompile("junit:junit:4.11")
 }

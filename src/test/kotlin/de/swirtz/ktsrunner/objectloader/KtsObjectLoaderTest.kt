@@ -14,7 +14,7 @@ class KtsObjectLoaderTest {
 
     @Test
     fun `general ScriptEngineFactory test`() {
-        KtsObjectLoader.engine.factory.apply {
+        KtsObjectLoader().engine.factory.apply {
             assertEquals("kotlin", languageName)
             assertEquals(KotlinCompilerVersion.VERSION, languageVersion)
             assertEquals("kotlin", engineName)
@@ -33,7 +33,7 @@ class KtsObjectLoaderTest {
 
     @Test
     fun `simple evaluations should work`() {
-        with(KtsObjectLoader.engine as KotlinJsr223JvmLocalScriptEngine) {
+        with(KtsObjectLoader().engine as KotlinJsr223JvmLocalScriptEngine) {
             val res1 = eval("val x = 3")
             assertNull(res1, "No returned value expected")
             val res2 = eval("x + 2")

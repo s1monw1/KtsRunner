@@ -1,5 +1,5 @@
 package de.swirtz.ktsrunner.objectloader
 
-data class ClassFromScript(val x: String) {
-    fun printme() = println("ClassFromScript with x=$x")
+data class ClassFromScript(val text: String) {
+    fun printMe() = println("ClassFromScript with text=$text")
 }

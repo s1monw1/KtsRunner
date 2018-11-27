@@ -6,7 +6,7 @@ import org.gradle.api.publish.maven.MavenPom
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
 
 project.group = "de.swirtz"
-project.version = "0.0.6"
+project.version = "0.0.7"
 val artifactID = "ktsRunner"
 
 plugins {
@@ -14,6 +14,11 @@ plugins {
     `maven-publish`
     `java-library`
     id("com.jfrog.bintray") version "1.8.0"
+}
+tasks {
+    "test"(Test::class) {
+        useJUnitPlatform()
+    }
 }
 
 dependencies {
@@ -25,8 +30,9 @@ dependencies {
     implementation(kotlin("compiler-embeddable", kotlinVersion))
     implementation(kotlin("script-util", kotlinVersion))
 
-    testImplementation(kotlin("test-junit", kotlinVersion))
-    testImplementation("junit:junit:4.11")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.2")
+    testImplementation("org.assertj:assertj-core:3.11.1")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
 }
 
 
@@ -82,5 +88,6 @@ tasks {
     withType<GenerateMavenPom> {
         destination = file("$buildDir/libs/$artifactID.pom")
     }
+
 }
 

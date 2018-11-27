@@ -1,33 +1,40 @@
 package de.swirtz.ktsrunner.objectloader
 
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.fail
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngine
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.nio.file.Files
 import java.nio.file.Paths
 import javax.script.ScriptEngine
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
-import kotlin.test.fail
 
 class KtsObjectLoaderTest {
 
     @Test
     fun `general ScriptEngineFactory test`() {
-        KtsObjectLoader().engine.factory.apply {
-            assertEquals("kotlin", languageName)
-            assertEquals(KotlinCompilerVersion.VERSION, languageVersion)
-            assertEquals("kotlin", engineName)
-            assertEquals(KotlinCompilerVersion.VERSION, engineVersion)
-            assertEquals(listOf("kts"), extensions)
-            assertEquals(listOf("text/x-kotlin"), mimeTypes)
-            assertEquals(listOf("kotlin"), names)
-            assertEquals("obj.method(arg1, arg2, arg3)", getMethodCallSyntax("obj", "method", "arg1", "arg2", "arg3"))
-            assertEquals("print(\"Hello, world!\")", getOutputStatement("Hello, world!"))
-            assertEquals(KotlinCompilerVersion.VERSION, getParameter(ScriptEngine.LANGUAGE_VERSION))
+        with(KtsObjectLoader().engine.factory) {
+            assertThat(languageName).isEqualTo("kotlin")
+            assertThat(languageVersion).isEqualTo(KotlinCompilerVersion.VERSION)
+            assertThat(engineName).isEqualTo("kotlin")
+            assertThat(engineVersion).isEqualTo(KotlinCompilerVersion.VERSION)
+            assertThat(extensions).contains("kts")
+            assertThat(mimeTypes).contains("text/x-kotlin")
+            assertThat(names).contains("kotlin")
+            assertThat(
+                getMethodCallSyntax(
+                    "obj",
+                    "method",
+                    "arg1",
+                    "arg2",
+                    "arg3"
+                )
+            ).isEqualTo("obj.method(arg1, arg2, arg3)")
+            assertThat(getOutputStatement("Hello, world!")).isEqualTo("print(\"Hello, world!\")")
+            assertThat(getParameter(ScriptEngine.LANGUAGE_VERSION)).isEqualTo(KotlinCompilerVersion.VERSION)
             val sep = System.getProperty("line.separator")
             val prog = arrayOf("val x: Int = 3", "var y = x + 2")
-            assertEquals(prog.joinToString(sep) + sep, getProgram(*prog))
+            assertThat(getProgram(*prog)).isEqualTo(prog.joinToString(sep) + sep)
         }
     }
 
@@ -35,51 +42,83 @@ class KtsObjectLoaderTest {
     fun `simple evaluations should work`() {
         with(KtsObjectLoader().engine as KotlinJsr223JvmLocalScriptEngine) {
             val res1 = eval("val x = 3")
-            assertNull(res1, "No returned value expected")
+            assertThat(res1).isEqualTo(null)
             val res2 = eval("x + 2")
-            assertEquals(5, res2, "Reusing x = 3 from prior statement.")
+            assertThat(res2).isEqualTo(5).describedAs("Reusing x = 3 from prior statement.")
             val fromScript = compile("""listOf(1,2,3).joinToString(":")""")
-            assertEquals(listOf(1, 2, 3).joinToString(":"), fromScript.eval())
+            assertThat(fromScript.eval()).isEqualTo(listOf(1, 2, 3).joinToString(":"))
         }
     }
 
     @Test
-    fun `expression from script`() {
+    fun `when loading expression from script it should result in an integer`() {
         val scriptContent = "5 + 10"
-
-        println(scriptContent)
-        assertEquals(15, KtsObjectLoader().load(scriptContent))
+        assertThat(KtsObjectLoader().load<Int>(scriptContent)).isEqualTo(15)
     }
 
     @Test
-    fun `class loaded from script`() {
+    fun `when loading class from string script the content should be as expected`() {
+
         val scriptContent = Files.readAllBytes(Paths.get("src/test/resources/testscript.kts"))?.let {
             String(it)
         } ?: fail("Cannot load script")
 
-        println(scriptContent)
-        assertEquals(ClassFromScript("I was created in kts; äö"), KtsObjectLoader().load(scriptContent))
+        val loaded = KtsObjectLoader().load<ClassFromScript>(scriptContent)
+        assertThat(loaded.text).isEqualTo("I was created in kts; äö")
+        assertThat(loaded::class).isEqualTo(ClassFromScript::class)
     }
 
     @Test
-    fun `class loaded from script via Reader`() {
-        val scriptContent = Files.newBufferedReader(Paths.get("src/test/resources/testscript.kts"))
-        assertEquals(ClassFromScript::class, KtsObjectLoader().load<ClassFromScript>(scriptContent)::class)
+    fun `when loading script with unexpected type, it should result in an IllegalArgumentException`() {
+        assertExceptionThrownBy<IllegalArgumentException> {
+            KtsObjectLoader().load<String>("5+1")
+        }
     }
 
     @Test
-    fun `class loaded from script via InputStream`() {
-        val scriptContent = Files.newInputStream(Paths.get("src/test/resources/testscript.kts"))
-        assertEquals(ClassFromScript::class, KtsObjectLoader().load<ClassFromScript>(scriptContent)::class)
+    fun `when loading script with flawed script, then a LoadException should be raised`() {
+        assertExceptionThrownBy<LoadException> {
+            KtsObjectLoader().load<Int>("Hello World")
+        }
+    }
+
+    val script1 = "src/test/resources/testscript.kts"
+    val script2 = "src/test/resources/testscript2.kts"
+
+    @Test
+    fun `when loading class from script via Reader the content should be as expected`() {
+        val scriptContent = Files.newBufferedReader(Paths.get(script1))
+        val loaded = KtsObjectLoader().load<ClassFromScript>(scriptContent)
+        assertThat(loaded.text).isEqualTo("I was created in kts; äö")
+        assertThat(loaded::class).isEqualTo(ClassFromScript::class)
     }
 
     @Test
-    fun `multiple classes loaded from script via InputStream`() {
-        val scriptContent = Files.newInputStream(Paths.get("src/test/resources/testscript.kts"))
-        val scriptContent2 = Files.newInputStream(Paths.get("src/test/resources/testscript2.kts"))
-        KtsObjectLoader()
-            .loadAll<ClassFromScript>(scriptContent, scriptContent2).forEach {
-            assertEquals(ClassFromScript::class, it::class)
+    fun `when loading class from script via InputStream the content should be as expected`() {
+        val scriptContent = Files.newInputStream(Paths.get(script1))
+        val loaded = KtsObjectLoader().load<ClassFromScript>(scriptContent)
+        assertThat(loaded.text).isEqualTo("I was created in kts; äö")
+        assertThat(loaded::class).isEqualTo(ClassFromScript::class)
+    }
+
+    @Test
+    fun `when loading multiple classes from script via InputStream, all should have the expected type`() {
+        val scriptContent = Files.newInputStream(Paths.get(script1))
+        val scriptContent2 = Files.newInputStream(Paths.get(script2))
+        assertThat(
+            KtsObjectLoader().loadAll<ClassFromScript>(scriptContent, scriptContent2)
+        ).allMatch { it::class == ClassFromScript::class }
+    }
+
+    @Test
+    fun `when passing a custom classloader, it should be used when loading the script`() {
+        val myCl = object : ClassLoader() {
+            override fun loadClass(name: String?): Class<*> {
+                throw IllegalStateException()
+            }
+        }
+        assertExceptionThrownBy<IllegalStateException> {
+            KtsObjectLoader(myCl).load("anything")
         }
     }
 }

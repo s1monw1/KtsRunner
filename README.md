@@ -33,7 +33,7 @@ println(loadedObj.x)
 // >> I was created in kts
 ```
 
-As shown, the `KtsObjectLoader` class can be used for executing a `.kts` script and return its result. The example shows a script that creates an instance of the `ClassFromScript` type that is loaded via ``KtsObjectLoader`` and then processed in the regular program.
+As shown, the `KtsObjectLoader` can be used for executing a `.kts` script and getting its result. The example shows a script that creates an instance of the `ClassFromScript` type that is loaded via ``KtsObjectLoader`` and then processed in the regular program.
 
 ### Executing scripts directly
 
@@ -49,8 +49,25 @@ println(fromScript)
 
 ### Application Area
 
-You might want to use **KtsRunner** when some part of your application's source has to be outsourced from the regular code. As an example, you can think of an application that provides a test suite runtime. The actual test cases are provided by technical testers who write their test scripts using a **domain specific language** that is provided by the main application. Since you don't want testers to add source files (defining new test cases) to your application all the time, the test case creation is made in independent `.kts` (Kotlin Scripting) files in which the DSL is utilized by the testing team. The test suite main application can use the presented **KtsRunner** library for loading the test cases provided in `.kts` files and process them further afterward.
+You might want to use **KtsRunner** when some part of your application's source has to be outsourced from the regular code. As an example, you can think of an application that provides a test suite runtime. The actual test cases are provided by a QA team which writes their test scripts using a **domain specific language** that is provided by the main application. Since you don't want QA to add source files (defining new test cases) to your application all the time, the test case creation is made via independent `.kts` (Kotlin Scripting) files in which the DSL is being utilized. The test suite main application can use the presented **KtsRunner** library for loading the test cases provided in `.kts` files and process them further afterward.
 
+### Controlling the ClassLoader
+
+When instantiating an `KtsObjectLoader`, you can provide an explicit classloader as shown in this test case:
+
+```kotlin
+ @Test
+    fun `when passing a custom classloader, it should be used when loading the script`() {
+        val myCl = object : ClassLoader() {
+            override fun loadClass(name: String?): Class<*> {
+                throw IllegalStateException()
+            }
+        }
+       assertExceptionThrownBy<IllegalStateException> {
+           KtsObjectLoader(myCl).load("anything")
+       }
+    }
+```
 ## Getting Started
 
 In your Gradle build, simply include the following repository and dependency:

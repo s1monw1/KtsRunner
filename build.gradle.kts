@@ -13,7 +13,7 @@ plugins {
     kotlin("jvm") version "1.3.70"
     `maven-publish`
     `java-library`
-    id("com.jfrog.bintray") version "1.8.0"
+    id("com.jfrog.bintray") version "1.8.4"
 }
 
 
@@ -45,7 +45,7 @@ val sourcesJar by tasks.creating(Jar::class) {
     from(sourceSets.getByName("main").allSource)
 }
 
-val publicationName = "${artifactID}_pub"
+val publicationName = "ktsRunner_pub"
 publishing {
     publications {
         create<MavenPublication>(publicationName) {

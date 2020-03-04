@@ -6,29 +6,28 @@ import org.gradle.api.publish.maven.MavenPom
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
 
 project.group = "de.swirtz"
-project.version = "0.0.7"
+project.version = "0.0.8"
 val artifactID = "ktsRunner"
 
 plugins {
-    kotlin("jvm") version "1.3.10"
+    kotlin("jvm") version "1.3.70"
     `maven-publish`
     `java-library`
     id("com.jfrog.bintray") version "1.8.0"
 }
-tasks {
-    "test"(Test::class) {
-        useJUnitPlatform()
-    }
-}
+
 
 dependencies {
     implementation(kotlin("stdlib-jdk8", kotlinVersion))
     implementation(kotlin("reflect", kotlinVersion))
+    implementation(kotlin("script-runtime", kotlinVersion))
+    implementation(kotlin("script-util", kotlinVersion))
+    implementation(kotlin("compiler-embeddable", kotlinVersion))
+    implementation(kotlin("scripting-compiler-embeddable", kotlinVersion))
+    implementation(kotlin("script-util", kotlinVersion))
     implementation("org.slf4j:slf4j-api:1.7.14")
     implementation("ch.qos.logback:logback-classic:1.1.3")
-    implementation(kotlin("script-runtime", kotlinVersion))
-    implementation(kotlin("compiler-embeddable", kotlinVersion))
-    implementation(kotlin("script-util", kotlinVersion))
+    implementation("net.java.dev.jna:jna:4.2.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.2")
     testImplementation("org.assertj:assertj-core:3.11.1")
@@ -42,14 +41,14 @@ repositories {
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
-    classifier = "sources"
-    from(java.sourceSets["main"].allSource)
+    archiveClassifier.set("sources")
+    from(sourceSets.getByName("main").allSource)
 }
 
 val publicationName = "${artifactID}_pub"
 publishing {
-    publications.invoke {
-        publicationName(MavenPublication::class) {
+    publications {
+        create<MavenPublication>(publicationName) {
             artifactId = artifactID
             from(components["java"])
             artifact(sourcesJar)
@@ -84,6 +83,7 @@ tasks {
     }
     withType(Test::class.java) {
         testLogging.showStandardStreams = true
+        useJUnitPlatform()
     }
     withType<GenerateMavenPom> {
         destination = file("$buildDir/libs/$artifactID.pom")

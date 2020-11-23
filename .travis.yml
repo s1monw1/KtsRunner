@@ -4,7 +4,7 @@ before_install:
   - chmod -R +x lib/src
   - chmod +x lib/gradlew
 
-script: ./gradlew clean build
+script: ./gradlew :lib:clean build
 deploy:
     provider: script
     script: ./gradlew :lib:bintrayUpload -PbintrayUser=$BINTRAY_USER -PbintrayApiKey=$BINTRAY_KEY

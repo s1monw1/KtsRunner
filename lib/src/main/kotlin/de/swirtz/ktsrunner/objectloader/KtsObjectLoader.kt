@@ -12,7 +12,7 @@ public class KtsObjectLoader(classLoader: ClassLoader? = Thread.currentThread().
 
     public val engine: ScriptEngine = ScriptEngineManager(classLoader).getEngineByExtension("kts")
 
-    public inline fun <reified T> Any?.castOrError() = takeIf { it is T }?.let { it as T }
+    public inline fun <reified T> Any?.castOrError(): T = takeIf { it is T }?.let { it as T }
         ?: throw IllegalArgumentException("Cannot cast $this to expected type ${T::class}")
 
     public inline fun <reified T> load(script: String): T =

@@ -81,7 +81,7 @@ maven {
 ```kotlin
 dependencies {
     //...
-    compile("de.swirtz:ktsRunner:0.0.x")
+    implementation("de.swirtz:ktsRunner:0.0.x")
 }
 ```
 

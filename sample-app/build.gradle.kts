@@ -11,7 +11,7 @@ dependencies {
     implementation(kotlin("reflect"))
     implementation("org.slf4j:slf4j-api:1.7.30")
     implementation("ch.qos.logback:logback-classic:1.2.3")
-    implementation("de.swirtz:ktsRunner:0.0.9")
+    implementation("de.swirtz:ktsRunner:0.0.8")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.0")

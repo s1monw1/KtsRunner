@@ -2,8 +2,7 @@ package de.swirtz.sample
 
 import de.swirtz.ktsrunner.objectloader.KtsObjectLoader
 
-fun main() {
+fun readRandomValueFromScript(): Int {
     println("Hello Kotlin Scripting World")
-    val i = KtsObjectLoader().load<Int>("val x = 10; x")
-    println(i)
+    return KtsObjectLoader().load("val x = 10; x")
 }
